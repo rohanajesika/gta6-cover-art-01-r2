@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vice Nights Cover Lab — GTA 6-style cover art maker</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div>
+      <h1>Vice Nights Cover Lab</h1>
+      <p>Turn your photo + caption into GTA 6-style poster cover art. Offline, on your machine.</p>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button id="btn-samples" type="button" class="btn btn-ghost">Load sample photos</button>
+    <button id="btn-export" type="button" class="btn btn-primary">Export PNG</button>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="stage-col">
+    <div class="stage-wrap">
+      <canvas id="preview" width="1080" height="1080" aria-label="Cover preview"></canvas>
+      <p class="stage-hint" id="stage-hint">Click a panel to select it, then drag to pan and scroll to zoom.</p>
+    </div>
+    <div class="panel-cards" id="panel-cards" aria-label="Panels"></div>
+  </section>
+
+  <aside class="controls">
+    <section class="card">
+      <h2>Layout</h2>
+      <div class="seg" id="layout-seg" role="group" aria-label="Layout">
+        <button type="button" data-layout="split" class="seg-btn is-active">Split · 2</button>
+        <button type="button" data-layout="triptych" class="seg-btn">Triptych · 3</button>
+        <button type="button" data-layout="hero" class="seg-btn">Hero · 1+2</button>
+      </div>
+      <p class="note">Panels keep their photos when you switch layout.</p>
+    </section>
+
+    <section class="card">
+      <h2>Colour grade</h2>
+      <div class="grades" id="grade-list" role="group" aria-label="Colour grade"></div>
+    </section>
+
+    <section class="card">
+      <h2>Caption</h2>
+      <label class="field">
+        <span>Main title</span>
+        <input id="input-title" type="text" maxlength="24" value="VICE NIGHTS" autocomplete="off">
+      </label>
+      <label class="field">
+        <span>Tagline</span>
+        <input id="input-tagline" type="text" maxlength="48" value="ONE CITY. EVERY NIGHT. YOURS." autocomplete="off">
+      </label>
+      <p class="note">Lettering is drawn by the app itself — no font files, all vector strokes.</p>
+    </section>
+
+    <section class="card">
+      <h2>Export size</h2>
+      <div class="seg" id="size-seg" role="group" aria-label="Export size">
+        <button type="button" data-size="square" class="seg-btn is-active">1080 × 1080</button>
+        <button type="button" data-size="portrait" class="seg-btn">1080 × 1350</button>
+        <button type="button" data-size="wide" class="seg-btn">1920 × 1080</button>
+      </div>
+      <label class="field">
+        <span>File name</span>
+        <input id="input-filename" type="text" value="vice-nights-cover" autocomplete="off">
+      </label>
+      <button id="btn-export-2" type="button" class="btn btn-primary btn-block">Export PNG</button>
+      <p class="note" id="export-status" role="status">Nothing exported yet.</p>
+    </section>
+
+    <section class="card">
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li>Load a photo into each panel — your own file, or a sample.</li>
+        <li>Drag a panel to pan, scroll or use the slider to zoom.</li>
+        <li>Pick a layout, a grade and a caption.</li>
+        <li>Export a PNG in 1080×1080, 1080×1350 or 1920×1080.</li>
+      </ol>
+      <p class="note">Photos never leave your machine. Fan-made poster style; not affiliated with Rockstar Games.</p>
+    </section>
+  </aside>
+</main>
+
+<input id="file-input" type="file" accept="image/*" hidden>
+<script src="lettering.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

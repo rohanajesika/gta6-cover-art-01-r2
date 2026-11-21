@@ -1,0 +1,242 @@
+/* Vice Nights Cover Lab — editor chrome.
+   Dark neon UI; the cover itself is drawn on canvas (app.js + lettering.js). */
+:root {
+  --bg: #0c0817;
+  --panel: #171126;
+  --panel-2: #1e1533;
+  --line: #33254f;
+  --text: #f4eefc;
+  --muted: #b3a6cc;
+  --accent: #ff2e88;
+  --accent-2: #ffd319;
+  --accent-3: #00e5ff;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background:
+    radial-gradient(900px 500px at 15% -10%, rgba(255, 46, 136, .22), transparent 60%),
+    radial-gradient(800px 500px at 95% 0%, rgba(0, 229, 255, .16), transparent 60%),
+    var(--bg);
+  color: var(--text);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand { display: flex; align-items: center; gap: 14px; }
+
+.brand-mark {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  flex: none;
+  background: linear-gradient(135deg, #ffd319 0%, #ff2975 55%, #8c1eff 100%);
+  box-shadow: 0 0 24px rgba(255, 46, 136, .55);
+  position: relative;
+}
+.brand-mark::after {
+  content: "";
+  position: absolute;
+  left: 9px; right: 9px; bottom: 9px;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0 -7px 0 #fff, 0 -14px 0 rgba(255, 255, 255, .75);
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 21px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.brand p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+
+.top-actions { display: flex; gap: 10px; }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  padding: 20px 24px 32px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.stage-col { min-width: 0; }
+
+.stage-wrap {
+  background: #05030a;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+
+#preview {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: grab;
+  touch-action: none;
+  background: #0d0a1a;
+}
+#preview.dragging { cursor: grabbing; }
+
+.stage-hint { color: var(--muted); font-size: 13px; margin: 10px 2px 0; }
+
+.panel-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.panel-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+.panel-card.is-selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+.panel-card h3 { margin: 0 0 2px; font-size: 14px; }
+.panel-card .photo-name {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panel-card .row { display: flex; gap: 8px; margin-bottom: 10px; }
+.panel-card label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.panel-card input[type="range"] { width: 100%; accent-color: var(--accent); }
+.panel-card .zoom-val { font-size: 12px; color: var(--muted); }
+
+.controls { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.card h2 {
+  margin: 0 0 12px;
+  font-size: 13px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg-btn {
+  flex: 1 1 auto;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel-2);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.seg-btn:hover { border-color: var(--accent); }
+.seg-btn.is-active {
+  background: linear-gradient(135deg, rgba(255, 41, 117, .9), rgba(140, 30, 255, .9));
+  border-color: transparent;
+}
+
+.grades { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.grade-btn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel-2);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+.grade-btn:hover { border-color: var(--accent); }
+.grade-btn.is-active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.grade-swatch {
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  flex: none;
+  border: 1px solid rgba(255, 255, 255, .25);
+}
+
+.field { display: block; margin-bottom: 12px; }
+.field > span { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+.field input[type="text"] {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #0e0a1c;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+}
+.field input[type="text"]:focus { outline: 2px solid var(--accent-3); outline-offset: 1px; }
+
+.btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--text);
+  background: var(--panel-2);
+}
+.btn:hover { border-color: var(--accent); }
+.btn-primary {
+  background: linear-gradient(135deg, #ff2975, #8c1eff);
+  border-color: transparent;
+  font-weight: 650;
+}
+.btn-ghost { background: transparent; }
+.btn-small { padding: 7px 10px; font-size: 12px; }
+.btn-block { width: 100%; margin-top: 4px; }
+
+/* keyboard focus must stay visible on the dark chrome */
+.seg-btn:focus-visible,
+.grade-btn:focus-visible,
+.btn:focus-visible,
+.panel-card input[type="range"]:focus-visible {
+  outline: 2px solid var(--accent-3);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+.note { color: var(--muted); font-size: 12.5px; margin: 10px 0 0; }
+.steps { margin: 0; padding-left: 18px; color: var(--muted); font-size: 13.5px; }
+.steps li { margin-bottom: 6px; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+}
